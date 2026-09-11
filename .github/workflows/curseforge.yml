@@ -1,0 +1,27 @@
+# Uploads each published release's jar to CurseForge (see stoshelabs/.github curseforge-publish.yml).
+# Run it by hand from the Actions tab to (re)publish an existing release, or to dry-run one.
+name: Publish to CurseForge
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to (re)publish, e.g. v1.2.0
+        required: true
+      dry-run:
+        description: Resolve everything and stop before uploading
+        type: boolean
+        default: false
+
+jobs:
+  curseforge:
+    uses: stoshelabs/.github/.github/workflows/curseforge-publish.yml@main
+    with:
+      project-id: "1430091"
+      tag: ${{ inputs.tag }}
+      dry-run: ${{ inputs.dry-run == true }}
+      relations: "taleguard:optionalDependency"
+    secrets:
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
